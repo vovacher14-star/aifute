@@ -325,13 +325,8 @@
         <div class="settings-row">
           <span>Модель</span>
           <select id="modelSelect">
+            <option value="openai/gpt-5.6-luna">GPT-5.6 Luna (стабильная)</option>
             <option value="google/gemini-2.5-flash">Gemini 2.5 Flash</option>
-            <option value="openai/gpt-5.6-luna">GPT-5.6 Luna</option>
-            <option value="openai/gpt-6.1">GPT-6.1</option>
-            <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6</option>
-            <option value="anthropic/claude-opus-5.5">Claude Opus 5.5</option>
-            <option value="x-ai/grok-4.20">Grok 4.20</option>
-            <option value="deepseek/deepseek-v4.1-flash">DeepSeek V4.1 Flash</option>
           </select>
         </div>
         <div class="settings-row">
@@ -366,7 +361,7 @@
 
 <div id="chat">
   <div class="ai-wrap">
-    <div class="msg ai">Привет! Я Aifute 6.0 на Puter. Теперь я умею думать по-настоящему, искать в интернете и работать с разными моделями. Спрашивай что угодно.</div>
+    <div class="msg ai">Привет! Я Aifute 6.0 на Puter. Теперь я умею думать по-настоящему и искать в интернете. Спрашивай что угодно.</div>
   </div>
 </div>
 
@@ -402,13 +397,6 @@
 </div>
 
 <script>
-  // ============================================================
-  // PUTER 6.0
-  // ============================================================
-  // API-ключ НЕ нужен! Puter.js работает прямо в браузере.
-  // При первом запросе Puter попросит войти (или создаст аккаунт).
-  // ============================================================
-
   const MAX_CHATS = 150;
   const CHARS_PER_TICK = 2;
   const TICK_MS = 18;
@@ -470,7 +458,7 @@
   function loadSettings() {
     const lang = localStorage.getItem('aifute_lang') || 'ru';
     const theme = localStorage.getItem('aifute_theme') || 'light';
-    const model = localStorage.getItem('aifute_model') || 'google/gemini-2.5-flash';
+    const model = localStorage.getItem('aifute_model') || 'openai/gpt-5.6-luna';
     thinkingMode = localStorage.getItem('aifute_thinking') === '1';
     searchMode = localStorage.getItem('aifute_search') === '1';
     langSelect.value = lang;
@@ -572,7 +560,7 @@
       wrap.className = 'ai-wrap';
       const div = document.createElement('div');
       div.className = 'msg ai';
-      div.textContent = 'Привет! Я Aifute 6.0 на Puter. Теперь я умею думать по-настоящему, искать в интернете и работать с разными моделями. Спрашивай что угодно.';
+      div.textContent = 'Привет! Я Aifute 6.0 на Puter. Теперь я умею думать по-настоящему и искать в интернете. Спрашивай что угодно.';
       wrap.appendChild(div);
       chatEl.appendChild(wrap);
       return;
@@ -814,7 +802,6 @@
     showToast(searchMode ? 'Поиск включён' : 'Поиск выключен');
   });
 
-  // Вход в Puter
   loginBtn.addEventListener('click', async () => {
     try {
       if (typeof puter !== 'undefined' && puter.auth) {
@@ -848,9 +835,6 @@
     input.placeholder = 'Спроси что-нибудь...';
   }
 
-  // ============================================================
-  // ЗАПРОС К PUTER
-  // ============================================================
   function buildMessages(messages, question) {
     const result = [];
     for (let i = 0; i < messages.length; i++) {
@@ -886,7 +870,6 @@
       stream: true
     };
 
-    // Поиск — добавляем инструмент web_search (если модель поддерживает)
     if (searchMode) {
       options.tools = [{ type: 'web_search' }];
     }
@@ -910,7 +893,6 @@
         fullText += part.text;
         if (onChunk) onChunk(part.text, fullText);
       }
-      // Источники от поиска (если Puter их отдаёт)
       if (part?.sources && Array.isArray(part.sources)) {
         sources = part.sources;
       }
